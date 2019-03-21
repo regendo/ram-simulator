@@ -121,7 +121,7 @@ class RamSub extends RamCommand {
 	execute(execState: { accumulator: number; memory: (string | number)[] }) {
 		const toAdd = execState.memory[this.param];
 		if (typeof toAdd === "number") {
-			const result = Math.min(0, execState.accumulator + toAdd);
+			const result = Math.max(0, execState.accumulator - toAdd);
 			execState.accumulator = result;
 		}
 	}
@@ -148,7 +148,7 @@ class RamWrite extends RamCommand {
 		this.char = char;
 	}
 	execute(execState: { output: string }) {
-		execState.output.concat(this.char);
+		execState.output += this.char;
 	}
 }
 
