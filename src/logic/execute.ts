@@ -10,6 +10,7 @@ export class RAM {
 		input: string;
 		inputAt: number;
 		output: string;
+		done: boolean;
 	};
 	constructor(commands: RamCommand[], input: string) {
 		this.commands = commands;
@@ -28,18 +29,22 @@ export class RAM {
 			inputAt: 0,
 			line: 1,
 			memory: [],
-			output: ""
+			output: "",
+			done: false
 		};
 		this.stepCount = 0;
 	}
 
 	execLine(): void {
+		if (this.execState.done) {
+			return;
+		}
 		const prevLine = this.execState.line;
 		const command = this.commands[this.execState.line - 1];
 		command.execute(this.execState);
 		this.stepCount++;
 		this.validate();
-		if (this.execState.line == prevLine) {
+		if (this.execState.line == prevLine && !this.execState.done) {
 			// regular command, execution didn't jump around
 			this.execState.line++;
 		}
