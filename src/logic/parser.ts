@@ -13,11 +13,11 @@ function parseElem(elem: string): RamCommand | null | Error {
 	// and split into individual commands/arguments
 	const words: (string | number)[] = elem
 		.split("//")[0]
-		.split(" ")
+		.split(/\s/)
 		.filter((word) => word !== "")
 		.map((word) => {
 			const num = Number.parseInt(word);
-			if (num === NaN || num < 0) {
+			if (isNaN(num) || num < 0) {
 				return word;
 			}
 			return num;
