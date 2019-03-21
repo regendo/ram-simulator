@@ -1,4 +1,4 @@
-import { RamState } from "./execute";
+import { RamState } from "./ram";
 import { ParseHelper } from "./parseHelper";
 
 export abstract class RamCommand {
