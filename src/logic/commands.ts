@@ -1,6 +1,8 @@
+import { RamState } from "./execute";
+
 export abstract class RamCommand {
 	param: number;
-	execute(execState: Object): void {}
+	execute(state: RamState): void {}
 }
 
 class RamDirectLoad extends RamCommand {
@@ -8,8 +10,8 @@ class RamDirectLoad extends RamCommand {
 		super();
 		this.param = param;
 	}
-	execute(execState: { accumulator: number }) {
-		execState.accumulator = this.param;
+	execute(state: RamState) {
+		state.accumulator = this.param;
 	}
 }
 
@@ -18,12 +20,8 @@ class RamLoad extends RamCommand {
 		super();
 		this.param = param;
 	}
-	execute(execState: {
-		accumulator: string | number;
-		memory: (string | number)[];
-		line: number;
-	}) {
-		execState.accumulator = execState.memory[this.param];
+	execute(state: RamState) {
+		state.accumulator = state.memory[this.param];
 	}
 }
 
@@ -32,14 +30,10 @@ class RamILoad extends RamCommand {
 		super();
 		this.param = param;
 	}
-	execute(execState: {
-		accumulator: string | number;
-		memory: (string | number)[];
-		line: number;
-	}) {
-		const index = execState.memory[this.param];
+	execute(state: RamState) {
+		const index = state.memory[this.param];
 		if (typeof index === "number") {
-			execState.accumulator = execState.memory[index];
+			state.accumulator = state.memory[index];
 		}
 	}
 }
@@ -49,8 +43,8 @@ class RamGoto extends RamCommand {
 		super();
 		this.param = param;
 	}
-	execute(execState: { line: number }) {
-		execState.line = this.param;
+	execute(state: RamState) {
+		state.line = this.param;
 	}
 }
 
@@ -62,9 +56,9 @@ class RamIfThen extends RamCommand {
 		this.condition = condition;
 		this.param = param;
 	}
-	execute(execState: { accumulator: string | number; line: number }) {
-		if (execState.accumulator === this.condition) {
-			execState.line = this.param;
+	execute(state: RamState) {
+		if (state.accumulator === this.condition) {
+			state.line = this.param;
 		}
 	}
 }
@@ -74,12 +68,8 @@ class RamStore extends RamCommand {
 		super();
 		this.param = param;
 	}
-	execute(execState: {
-		accumulator: string | number;
-		memory: (string | number)[];
-		line: number;
-	}) {
-		execState.memory[this.param] = execState.accumulator;
+	execute(state: RamState) {
+		state.memory[this.param] = state.accumulator;
 	}
 }
 
@@ -88,14 +78,10 @@ class RamIStore extends RamCommand {
 		super();
 		this.param = param;
 	}
-	execute(execState: {
-		accumulator: string | number;
-		memory: (string | number)[];
-		line: number;
-	}) {
-		const index = execState.memory[this.param];
+	execute(state: RamState) {
+		const index = state.memory[this.param];
 		if (typeof index === "number") {
-			execState.memory[index] = execState.accumulator;
+			state.memory[index] = state.accumulator;
 		}
 	}
 }
@@ -105,10 +91,10 @@ class RamAdd extends RamCommand {
 		super();
 		this.param = param;
 	}
-	execute(execState: { accumulator: number; memory: (string | number)[] }) {
-		const toAdd = execState.memory[this.param];
-		if (typeof toAdd === "number") {
-			execState.accumulator += toAdd;
+	execute(state: RamState) {
+		const toAdd = state.memory[this.param];
+		if (typeof toAdd === "number" && typeof state.accumulator === "number") {
+			state.accumulator += toAdd;
 		}
 	}
 }
@@ -118,11 +104,11 @@ class RamSub extends RamCommand {
 		super();
 		this.param = param;
 	}
-	execute(execState: { accumulator: number; memory: (string | number)[] }) {
-		const toAdd = execState.memory[this.param];
-		if (typeof toAdd === "number") {
-			const result = Math.max(0, execState.accumulator - toAdd);
-			execState.accumulator = result;
+	execute(state: RamState) {
+		const toAdd = state.memory[this.param];
+		if (typeof toAdd === "number" && typeof state.accumulator === "number") {
+			const result = Math.max(0, state.accumulator - toAdd);
+			state.accumulator = result;
 		}
 	}
 }
@@ -131,13 +117,9 @@ class RamRead extends RamCommand {
 	constructor() {
 		super();
 	}
-	execute(execState: {
-		accumulator: string | number;
-		input: string;
-		inputAt: number;
-	}) {
-		execState.accumulator = execState.input[execState.inputAt];
-		execState.inputAt++;
+	execute(state: RamState) {
+		state.accumulator = state.input[state.inputAt];
+		state.inputAt++;
 	}
 }
 
@@ -147,8 +129,8 @@ class RamWrite extends RamCommand {
 		super();
 		this.char = char;
 	}
-	execute(execState: { output: string }) {
-		execState.output += this.char;
+	execute(state: RamState) {
+		state.output += this.char;
 	}
 }
 
@@ -157,10 +139,10 @@ class RamMul extends RamCommand {
 		super();
 		this.param = param;
 	}
-	execute(execState: { accumulator: number; memory: (string | number)[] }) {
-		const toMul = execState.memory[this.param];
-		if (typeof toMul === "number") {
-			execState.accumulator *= toMul;
+	execute(state: RamState) {
+		const toMul = state.memory[this.param];
+		if (typeof toMul === "number" && typeof state.accumulator === "number") {
+			state.accumulator *= toMul;
 		}
 	}
 }
@@ -170,11 +152,11 @@ class RamDiv extends RamCommand {
 		super();
 		this.param = param;
 	}
-	execute(execState: { accumulator: number; memory: (string | number)[] }) {
-		const toDiv = execState.memory[this.param];
-		if (typeof toDiv === "number") {
-			const result = Math.floor(execState.accumulator / toDiv);
-			execState.accumulator = result;
+	execute(state: RamState) {
+		const toDiv = state.memory[this.param];
+		if (typeof toDiv === "number" && typeof state.accumulator === "number") {
+			const result = Math.floor(state.accumulator / toDiv);
+			state.accumulator = result;
 		}
 	}
 }
@@ -183,8 +165,8 @@ class RamEnd extends RamCommand {
 	constructor() {
 		super();
 	}
-	execute(execState: { done: boolean }) {
-		execState.done = true;
+	execute(state: RamState) {
+		state.done = true;
 	}
 }
 
