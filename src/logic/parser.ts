@@ -1,6 +1,6 @@
-import { RamCommand, commands } from "./commands";
+import { RamCommand } from "./commands";
 
-function parseScript(script: string): RamCommand[] | Error[] {
+export function parseScript(script: string): RamCommand[] | Error[] {
 	const lines = script.split("\n").map(parseElem);
 	if (lines.some((e) => e instanceof Error)) {
 		return lines.filter((e): e is Error => e instanceof Error);
@@ -18,16 +18,23 @@ function parseElem(elem: string): RamCommand | null | Error {
 		.map((word) => {
 			const num = Number.parseInt(word);
 			if (isNaN(num) || num < 0) {
+				if (
+					word.length === 3 &&
+					(word[0] === "'" || word[0] === '"') &&
+					word[0] === word[word.length - 1]
+				) {
+					return word.slice(1, -1);
+				}
 				return word;
 			}
 			return num;
 		});
-	// TODO: Implement the rest of me!
-	if (Math.random() > 0.8) {
-		return new Error();
-	}
-	if (Math.random() > 0.5) {
+	if (words.length === 0) {
 		return null;
 	}
-	return new commands.end();
+	const match = RamCommand.matchAndConstruct(words);
+	if (match) {
+		return match;
+	}
+	return new Error(`No command matches the line "${words.join(" ")}"!`);
 }
