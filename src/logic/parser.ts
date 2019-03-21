@@ -9,7 +9,20 @@ function parseScript(script: string): RamCommand[] | Error[] {
 }
 
 function parseElem(elem: string): RamCommand | null | Error {
-	// TODO: Implement me!
+	// normalize input: Strip off comments and whitespace
+	// and split into individual commands/arguments
+	const words: (string | number)[] = elem
+		.split("//")[0]
+		.split(" ")
+		.filter((word) => word !== "")
+		.map((word) => {
+			const num = Number.parseInt(word);
+			if (num === NaN || num < 0) {
+				return word;
+			}
+			return num;
+		});
+	// TODO: Implement the rest of me!
 	if (Math.random() > 0.8) {
 		return new Error();
 	}
