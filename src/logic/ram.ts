@@ -1,5 +1,8 @@
 import { RamCommand } from "src/logic/commands";
 
+/**
+ * State of a RAM that commands have access to.
+ */
 export class RamState {
 	accumulator: number | string;
 	memory: (number | string)[];
@@ -9,11 +12,20 @@ export class RamState {
 	output: string;
 	done: boolean;
 }
+/**
+ * Simulated RAM that can execute supplied commands step-by-step or all at once.
+ */
 export class RAM {
 	commands: RamCommand[];
 	stepCount: number;
 	state: RamState;
 	initialMemory: (string | number)[];
+	/**
+	 * Creates an instance of RAM.
+	 * @param commands List of commands to execute.
+	 * @param [input] (Optional.) Input string.
+	 * @param [memory] (Optional.) Pre-initialized memory, in case your RAM program reads input from memory instead of from the input string. Note that while internally, the RAM does have a 0th memory address, it is unused. Any pre-initialized memory you provide will only fill the used memory locations 1-n.
+	 */
 	constructor(
 		commands: RamCommand[],
 		input: string = "",
@@ -25,6 +37,9 @@ export class RAM {
 		this.state.input = input;
 	}
 
+	/**
+	 * Resets the RAM to a clean state so that the program can be re-run from the start.
+	 */
 	reset(): void {
 		let input = "";
 		if (this.state) {
@@ -42,12 +57,18 @@ export class RAM {
 		this.stepCount = 0;
 	}
 
+	/**
+	 * Run the program until the end.
+	 */
 	execFull(): void {
 		while (!this.state.done) {
 			this.execLine();
 		}
 	}
 
+	/**
+	 * Run just the next line of the program.
+	 */
 	execLine(): void {
 		if (this.state.done) {
 			return;

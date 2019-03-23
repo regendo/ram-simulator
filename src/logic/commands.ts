@@ -1,7 +1,20 @@
 import { RamState } from "./ram";
 import { ParseHelper } from "./parseHelper";
 
+/**
+ * Abstract class that all commands inherit from.
+ *
+ * Provides static `matchAndConstruct` method that constructs the appropriate command to your input.
+ */
 export abstract class RamCommand {
+	/**
+	 * Finds a command that matches the supplied input and constructs that command.
+	 *
+	 * Commands inheriting from this super class should overwrite this method to match and construct just that specific command.
+	 *
+	 * @param words Sequence of strings and numbers that represent the command.
+	 * @returns Constructed matching command, if any. False otherwise.
+	 */
 	static matchAndConstruct(words: (string | number)[]): false | RamCommand {
 		const match = Object.keys(commands)
 			.map((key) => {
@@ -21,6 +34,9 @@ export abstract class RamCommand {
 	}
 }
 
+/**
+ * Command `dload {value}` that loads supplied value into the accumulator.
+ */
 class RamDirectLoad extends RamCommand {
 	constructor(param: number) {
 		super();
@@ -41,6 +57,9 @@ class RamDirectLoad extends RamCommand {
 	}
 }
 
+/**
+ * Command `load {index}` that loads the value located in the memory at supplied index into the accumulator.
+ */
 class RamLoad extends RamCommand {
 	constructor(param: number) {
 		super();
@@ -61,6 +80,10 @@ class RamLoad extends RamCommand {
 	}
 }
 
+/**
+ * Command `iload {index}` that loads the value referenced in the memory at supplied index into the accumulator.
+ * (It loads `memory[memory[index]]`.)
+ */
 class RamILoad extends RamCommand {
 	constructor(param: number) {
 		super();
@@ -84,6 +107,9 @@ class RamILoad extends RamCommand {
 	}
 }
 
+/**
+ * Command `goto {line}` that jumps to supplied line in the program. The next command to be executed will be the one located at supplied line.
+ */
 class RamGoto extends RamCommand {
 	constructor(param: number) {
 		super();
@@ -104,6 +130,9 @@ class RamGoto extends RamCommand {
 	}
 }
 
+/**
+ * Command `if {condition} then {line}` that jumps to supplied line in the program if the accumulator value equals supplied condition value, and does nothing otherwise.
+ */
 class RamIfThen extends RamCommand {
 	condition: string | number;
 
@@ -142,6 +171,9 @@ class RamIfThen extends RamCommand {
 	}
 }
 
+/**
+ * Command `store {index}` that stores the accumulator value into the memory at supplied index.
+ */
 class RamStore extends RamCommand {
 	constructor(param: number) {
 		super();
@@ -162,6 +194,10 @@ class RamStore extends RamCommand {
 	}
 }
 
+/**
+ * Command `istore {index}` that stores the accumulator value into the memory at the position referenced by supplied index.
+ * (It stores into `memory[memory[index]]`.)
+ */
 class RamIStore extends RamCommand {
 	constructor(param: number) {
 		super();
@@ -185,6 +221,9 @@ class RamIStore extends RamCommand {
 	}
 }
 
+/**
+ * Command `add {index}` that increases the accumulator value by the value located in memory at supplied index.
+ */
 class RamAdd extends RamCommand {
 	constructor(param: number) {
 		super();
@@ -208,6 +247,11 @@ class RamAdd extends RamCommand {
 	}
 }
 
+/**
+ * Command `sub {index}` that decreases the accumulator value by the value located in memory at supplied index.
+ *
+ * Note that negative values are not supported. If this command would decrease the accumulator value below 0, it is set to 0 instead.
+ */
 class RamSub extends RamCommand {
 	constructor(param: number) {
 		super();
@@ -232,6 +276,9 @@ class RamSub extends RamCommand {
 	}
 }
 
+/**
+ * Command `read` that reads the next character of the input into the accumulator.
+ */
 class RamRead extends RamCommand {
 	constructor() {
 		super();
@@ -249,6 +296,9 @@ class RamRead extends RamCommand {
 	}
 }
 
+/**
+ * Commnad `write` that appends the accumulator character to the output.
+ */
 class RamWrite extends RamCommand {
 	char: string;
 	constructor(char: string) {
@@ -270,6 +320,9 @@ class RamWrite extends RamCommand {
 	}
 }
 
+/**
+ * Command `mul {index}` that multiplies the accumulator value by the value located in memory at supplied index.
+ */
 class RamMul extends RamCommand {
 	constructor(param: number) {
 		super();
@@ -293,6 +346,11 @@ class RamMul extends RamCommand {
 	}
 }
 
+/**
+ * Command `div {index}` that divides the accumulator value by the value located in memory at supplied index.
+ *
+ * Note that only integers are supported. If the result of the division doesn't result in a whole number, it is rounded down.
+ */
 class RamDiv extends RamCommand {
 	constructor(param: number) {
 		super();
@@ -317,6 +375,9 @@ class RamDiv extends RamCommand {
 	}
 }
 
+/**
+ * Command `end` that ends the execution of the program.
+ */
 class RamEnd extends RamCommand {
 	constructor() {
 		super();

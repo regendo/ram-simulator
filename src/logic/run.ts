@@ -9,6 +9,13 @@ function isCommandArray(ary: Error[] | RamCommand[]): ary is RamCommand[] {
 	);
 }
 
+/**
+ * Run a RAM program. Once done, print the RAM state. If the script cannot be parsed, print the errors.
+ *
+ * @param script Text script that describes a RAM program.
+ * @param input (Optional.) Input string.
+ * @param memory (Optional.) Pre-initialized memory that the program depends upon.
+ */
 export function run(
 	script: string,
 	input: string = "",
