@@ -2,7 +2,9 @@ import { RamCommand } from "./commands";
 import { parseScript } from "./parser";
 import { RAM } from "./ram";
 
-function isCommandArray(ary: Error[] | RamCommand[]): ary is RamCommand[] {
+export function isCommandArray(
+	ary: Error[] | RamCommand[]
+): ary is RamCommand[] {
 	return (
 		Array.isArray(ary) &&
 		ary.every((elem: Error | RamCommand) => elem instanceof RamCommand)

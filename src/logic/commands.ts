@@ -1,5 +1,5 @@
-import { RamState } from "./ram";
 import { ParseHelper } from "./parseHelper";
+import { RamState } from "./ram";
 
 /**
  * Abstract class that all commands inherit from.
@@ -15,7 +15,9 @@ export abstract class RamCommand {
 	 * @param words Sequence of strings and numbers that represent the command.
 	 * @returns Constructed matching command, if any. False otherwise.
 	 */
-	static matchAndConstruct(words: (string | number)[]): false | RamCommand {
+	public static matchAndConstruct(
+		words: (string | number)[]
+	): false | RamCommand {
 		const match = Object.keys(commands)
 			.map((key) => {
 				const command: typeof RamCommand = commands[key];
