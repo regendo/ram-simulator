@@ -12,9 +12,21 @@ class App extends React.Component {
 
 	runAndDisplayOutput = (event: React.FormEvent) => {
 		event.preventDefault();
-		this.loadRAM();
+		if (!this.ram || this.ram.state.done) {
+			this.loadRAM();
+		}
 		if (this.ram) {
 			this.ram.execFull();
+			this.updateOutput();
+		}
+	};
+
+	executeOneStep = () => {
+		if (!this.ram) {
+			this.loadRAM();
+		}
+		if (this.ram) {
+			this.ram.execLine();
 			this.updateOutput();
 		}
 	};
@@ -30,6 +42,7 @@ class App extends React.Component {
 				console.error(program);
 			}
 		}
+		this.updateOutput();
 	};
 
 	updateOutput = () => {
@@ -55,7 +68,13 @@ class App extends React.Component {
 						ref={this.script}
 					/>
 					<input ref={this.input} />
-					<button type="submit">Execute</button>
+					<button type="submit">Execute full script</button>
+					<button type="button" onClick={this.executeOneStep}>
+						Execute one step
+					</button>
+					<button type="button" onClick={this.loadRAM}>
+						Load/Reset RAM
+					</button>
 				</form>
 				<div id="output" ref={this.output} />
 			</div>
