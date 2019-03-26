@@ -61,7 +61,7 @@ class App extends React.Component {
 			<div className="App">
 				<header className="App-header">
 					<img src="react.svg" className="App-logo" alt="logo" />
-					<h1 className="App-title">RAM simulator in Typescript and React</h1>
+					<h1 className="App-title">RAM Simulator</h1>
 				</header>
 				<div className="body">
 					<textarea
@@ -76,14 +76,26 @@ class App extends React.Component {
 						ref={this.script}
 						className="code"
 						placeholder={`// enter your RAM program here
-						read          // jump point :read
-						if '#' then 5 // goto :end
-						write
-						goto 1        // loop back to :read
-						end           // jump point :end`}
+						// program that inverts a binary number
+						read
+						if '0' then 5
+						if '1' then 7
+						goto 9        // end if other character
+						write '1'
+						goto 1
+						write '0'
+						goto 1
+						end`}
 					/>
 					<form id="simulator" onSubmit={this.runAndDisplayOutput}>
-						<input ref={this.input} className="code" placeholder="010110#" />
+						<input
+							ref={this.input}
+							className="code"
+							spellCheck={false}
+							autoCapitalize="off"
+							autoCorrect="off"
+							placeholder="010110#"
+						/>
 						<button type="submit">Execute full script</button>
 						<button type="button" onClick={this.executeOneStep}>
 							Execute one step
