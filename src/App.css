@@ -36,7 +36,12 @@ footer {
 	font-size: 0.8em;
 }
 
-footer a img.logo {
+footer a {
+	color: #61dafb;
+	fill: #61dafb !important;
+}
+
+footer a .logo {
 	height: 16px;
 	width: 16px;
 	margin: 0px 3px -2px 4px;
