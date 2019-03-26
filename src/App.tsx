@@ -38,12 +38,14 @@ class App extends React.Component {
 		if (script && input) {
 			const program = parseScript(script.value);
 			if (isCommandArray(program)) {
+				script.classList.remove("error");
 				this.ram = new RAM(program, input.value);
+				this.updateOutput();
 			} else {
+				script.classList.add("error");
 				console.error(program);
 			}
 		}
-		this.updateOutput();
 	};
 
 	updateOutput = () => {
@@ -61,25 +63,37 @@ class App extends React.Component {
 					<img src="react.svg" className="App-logo" alt="logo" />
 					<h1 className="App-title">RAM simulator in Typescript and React</h1>
 				</header>
-				<form onSubmit={this.runAndDisplayOutput}>
+				<div className="body">
 					<textarea
 						id="script"
+						form="simulator"
 						autoCapitalize="none"
 						autoComplete="off"
+						autoFocus={true}
+						cols={40}
 						required
 						spellCheck={false}
 						ref={this.script}
+						className="code"
+						placeholder={`// enter your RAM program here
+						read          // jump point :read
+						if '#' then 5 // goto :end
+						write
+						goto 1        // loop back to :read
+						end           // jump point :end`}
 					/>
-					<input ref={this.input} />
-					<button type="submit">Execute full script</button>
-					<button type="button" onClick={this.executeOneStep}>
-						Execute one step
-					</button>
-					<button type="button" onClick={this.loadRAM}>
-						Load/Reset RAM
-					</button>
-				</form>
-				<div id="output" ref={this.output} />
+					<form id="simulator" onSubmit={this.runAndDisplayOutput}>
+						<input ref={this.input} className="code" placeholder="010110#" />
+						<button type="submit">Execute full script</button>
+						<button type="button" onClick={this.executeOneStep}>
+							Execute one step
+						</button>
+						<button type="button" onClick={this.loadRAM}>
+							Load/Reset RAM
+						</button>
+					</form>
+					<div id="output" ref={this.output} />
+				</div>
 				<Footer />
 			</div>
 		);

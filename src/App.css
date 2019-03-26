@@ -1,5 +1,10 @@
+/* CSS */
+@import url(https://cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css);
+
 .App {
 	text-align: center;
+	position: relative;
+	min-height: 100vh;
 }
 
 .App-logo {
@@ -32,8 +37,25 @@
 	}
 }
 
+div.body {
+	display: block;
+	max-width: 60%;
+	/* Footer height*/
+	padding-bottom: 4rem;
+	margin: 0px auto;
+}
+
 footer {
+	clear: both;
 	font-size: 0.8em;
+	/* Footer height */
+	height: 4rem;
+	background-color: #222;
+	color: white;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+
 }
 
 footer a {
@@ -45,4 +67,19 @@ footer a .logo {
 	height: 16px;
 	width: 16px;
 	margin: 0px 3px -2px 4px;
+}
+
+textarea {
+	resize: none;
+	min-width: 20em;
+	min-height: 10em;
+	font-size: 1.3em;
+}
+
+.code {
+	font-family: 'Fira Code Retina', 'Fira Code', 'Courier', monospace;
+}
+
+textarea.error {
+	border: 2px solid red !important;
 }
