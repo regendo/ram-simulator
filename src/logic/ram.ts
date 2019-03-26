@@ -57,11 +57,15 @@ export class RAM {
 		this.stepCount = 0;
 	}
 
+	canExecuteLine(): boolean {
+		return !this.state.done && !!this.commands[this.state.line - 1];
+	}
+
 	/**
 	 * Run the program until the end.
 	 */
 	execFull(): void {
-		while (!this.state.done) {
+		while (this.canExecuteLine()) {
 			this.execLine();
 		}
 	}
@@ -70,7 +74,7 @@ export class RAM {
 	 * Run just the next line of the program.
 	 */
 	execLine(): void {
-		if (this.state.done) {
+		if (!this.canExecuteLine()) {
 			return;
 		}
 		const prevLine = this.state.line;

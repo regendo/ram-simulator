@@ -16,7 +16,7 @@ class App extends React.Component {
 		if (!this.ram || this.ram.state.done) {
 			this.loadRAM();
 		}
-		if (this.ram) {
+		if (this.ram && this.ram.canExecuteLine()) {
 			this.ram.execFull();
 			this.updateOutput();
 		}
@@ -26,7 +26,7 @@ class App extends React.Component {
 		if (!this.ram) {
 			this.loadRAM();
 		}
-		if (this.ram) {
+		if (this.ram && this.ram.canExecuteLine()) {
 			this.ram.execLine();
 			this.updateOutput();
 		}
@@ -40,12 +40,12 @@ class App extends React.Component {
 			if (isCommandArray(program)) {
 				script.classList.remove("error");
 				this.ram = new RAM(program, input.value);
-				this.updateOutput();
 			} else {
 				script.classList.add("error");
 				console.error(program);
 			}
 		}
+		this.updateOutput();
 	};
 
 	updateOutput = () => {
