@@ -49,7 +49,7 @@ class App extends React.Component {
 	};
 
 	updateOutput = () => {
-		if (this.ram) {
+		if (this.ram && this.ram.commands.length > 0) {
 			this.output.current!.innerHTML = JSON.stringify(this.ram.state);
 		} else {
 			this.output.current!.innerHTML = "";
