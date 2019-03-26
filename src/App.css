@@ -1,4 +1,3 @@
-/* CSS */
 @import url(https://cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css);
 
 .App {
@@ -7,15 +6,14 @@
 	min-height: 100vh;
 }
 
-.App-logo {
-	animation: App-logo-spin infinite 20s linear;
-	height: 80px;
+.App-header {
+	height: 3rem;
+	padding: 15px;
 }
 
-.App-header {
+.App-header,
+footer {
 	background-color: #222;
-	height: 120px;
-	padding: 15px;
 	color: white;
 }
 
@@ -27,19 +25,10 @@
 	font-size: large;
 }
 
-@keyframes App-logo-spin {
-	from {
-		transform: rotate(0deg);
-	}
-
-	to {
-		transform: rotate(360deg);
-	}
-}
-
 div.body {
 	display: block;
 	max-width: 60%;
+	padding-top: 1rem;
 	/* Footer height*/
 	padding-bottom: 4rem;
 	margin: 0px auto;
@@ -50,8 +39,6 @@ footer {
 	font-size: 0.8em;
 	/* Footer height */
 	height: 4rem;
-	background-color: #222;
-	color: white;
 	position: absolute;
 	bottom: 0;
 	width: 100%;

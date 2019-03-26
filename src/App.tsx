@@ -60,7 +60,6 @@ class App extends React.Component {
 		return (
 			<div className="App">
 				<header className="App-header">
-					<img src="react.svg" className="App-logo" alt="logo" />
 					<h1 className="App-title">RAM Simulator</h1>
 				</header>
 				<div className="body">
