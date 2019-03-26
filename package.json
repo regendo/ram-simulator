@@ -1,6 +1,7 @@
 {
 	"name": "ram-simulator",
 	"version": "0.1.0",
+	"homepage": ".",
 	"private": true,
 	"dependencies": {
 		"ajv": "^6.10.0",
@@ -23,7 +24,7 @@
 		"@types/node": "^11.11.6",
 		"@types/react": "^16.8.8",
 		"@types/react-dom": "^16.8.3",
-		"typescript": "^2.9.2"
+		"typescript": "^3.3.4000"
 	},
 	"browserslist": [
 		">0.2%",

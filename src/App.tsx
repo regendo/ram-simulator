@@ -1,5 +1,6 @@
 import * as React from "react";
 import "./App.css";
+import { Footer } from "./Footer";
 import { parseScript } from "./logic/parser";
 import { isCommandArray } from "./logic/run";
 import { RAM } from "./logic/ram";
@@ -48,6 +49,8 @@ class App extends React.Component {
 	updateOutput = () => {
 		if (this.ram) {
 			this.output.current!.innerHTML = JSON.stringify(this.ram.state);
+		} else {
+			this.output.current!.innerHTML = "";
 		}
 	};
 
@@ -55,7 +58,7 @@ class App extends React.Component {
 		return (
 			<div className="App">
 				<header className="App-header">
-					<img src="logo.svg" className="App-logo" alt="logo" />
+					<img src="react.svg" className="App-logo" alt="logo" />
 					<h1 className="App-title">RAM simulator in Typescript and React</h1>
 				</header>
 				<form onSubmit={this.runAndDisplayOutput}>
@@ -77,6 +80,7 @@ class App extends React.Component {
 					</button>
 				</form>
 				<div id="output" ref={this.output} />
+				<Footer />
 			</div>
 		);
 	}
