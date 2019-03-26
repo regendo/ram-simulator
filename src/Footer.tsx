@@ -8,7 +8,7 @@ export class Footer extends React.Component {
 		return (
 			<footer>
 				<p>
-					This site was made using
+					Made with 💙 using
 					<a href="https://typescriptlang.org">
 						<TSLogo />
 						Typescript

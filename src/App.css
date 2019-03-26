@@ -41,13 +41,15 @@ footer {
 	height: 4rem;
 	position: absolute;
 	bottom: 0;
+	padding-bottom: 2px;
 	width: 100%;
-
 }
 
 footer a {
 	color: #61dafb;
+	/* SVG fill and stroke color */
 	fill: #61dafb !important;
+	stroke: #61dafb;
 }
 
 footer a .logo {
