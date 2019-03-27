@@ -1,16 +1,18 @@
 {
 	"name": "ram-simulator",
 	"version": "0.1.0",
-	"homepage": ".",
+	"homepage": "https://stefboehm.de/tools/ram-simulator",
 	"private": true,
 	"dependencies": {
 		"ajv": "^6.10.0",
 		"ajv-keywords": "^3.4.0",
 		"ansi-styles": "^3.2.1",
 		"assign-symbols": "^2.0.2",
+		"npm": "^6.9.0",
 		"react": "^16.8.5",
 		"react-dom": "^16.8.5",
 		"react-scripts-ts": "^4.0.8",
+		"serve": "^10.1.2",
 		"ts-jest": "^24.0.0"
 	},
 	"scripts": {
