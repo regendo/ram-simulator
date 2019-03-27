@@ -16,9 +16,15 @@ class App extends React.Component {
 		this.state = { memory: ["", "", "", ""] };
 	}
 
-	callbackToEditMemory = (idx: number, elem: string | number) => {
+	callbackToEditMemory = (idx: number, elem: string) => {
+		// input value is always a string
+		let value: string | number = Number.parseInt(elem);
+		if (Number.isNaN(value)) {
+			value = elem;
+		}
+
 		const memory = this.state.memory;
-		memory[idx] = elem;
+		memory[idx] = value;
 		console.table(this.state.memory);
 		console.table(memory);
 		this.setState({ memory: memory });
