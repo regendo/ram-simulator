@@ -13,8 +13,16 @@ class App extends React.Component {
 
 	constructor(props: {}) {
 		super(props);
-		this.state = { memory: [""] };
+		this.state = { memory: ["", "", "", ""] };
 	}
+
+	callbackToEditMemory = (idx: number, elem: string | number) => {
+		const memory = this.state.memory;
+		memory[idx] = elem;
+		console.table(this.state.memory);
+		console.table(memory);
+		this.setState({ memory: memory });
+	};
 
 	script = React.createRef<HTMLTextAreaElement>();
 	input = React.createRef<HTMLInputElement>();
@@ -49,7 +57,7 @@ class App extends React.Component {
 			const program = parseScript(script.value);
 			if (isCommandArray(program)) {
 				script.classList.remove("error");
-				this.ram = new RAM(program, input.value);
+				this.ram = new RAM(program, input.value, this.state.memory);
 			} else {
 				script.classList.add("error");
 				console.error(program);
@@ -67,12 +75,12 @@ class App extends React.Component {
 				input: this.ram.state.input,
 				inputAt: this.ram.state.inputAt,
 				output: this.ram.state.output,
-				done: this.ram.state.done
+				done: this.ram.state.done,
+				memory: this.ram.state.memory
 			});
 			this.setState({ memory: this.ram.state.memory });
 		} else {
 			this.output.current!.innerHTML = "";
-			this.setState({ memory: [""] });
 		}
 	};
 
@@ -106,7 +114,7 @@ class App extends React.Component {
 						goto 1
 						end`}
 					/>
-					<form id="simulator" onSubmit={this.runAndDisplayOutput}>
+					<div>
 						<input
 							ref={this.input}
 							className="code"
@@ -114,7 +122,15 @@ class App extends React.Component {
 							autoCapitalize="off"
 							autoCorrect="off"
 							placeholder="010110#"
+							form="simulator"
 						/>
+						<Memory
+							memory={this.state.memory}
+							allowEdit={!this.ram}
+							callback={this.callbackToEditMemory}
+						/>
+					</div>
+					<form id="simulator" onSubmit={this.runAndDisplayOutput}>
 						<button type="submit">Execute full script</button>
 						<button type="button" onClick={this.executeOneStep}>
 							Execute one step
@@ -124,8 +140,6 @@ class App extends React.Component {
 						</button>
 					</form>
 					<div id="output" ref={this.output} />
-
-					<Memory memory={this.state.memory} />
 				</div>
 				<Footer />
 			</div>

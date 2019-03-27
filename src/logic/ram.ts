@@ -24,7 +24,7 @@ export class RAM {
 	 * Creates an instance of RAM.
 	 * @param commands List of commands to execute.
 	 * @param [input] (Optional.) Input string.
-	 * @param [memory] (Optional.) Pre-initialized memory, in case your RAM program reads input from memory instead of from the input string. Note that while internally, the RAM does have a 0th memory address, it is unused. Any pre-initialized memory you provide will only fill the used memory locations 1-n.
+	 * @param [memory] (Optional.) Pre-initialized memory, in case your RAM program reads input from memory instead of from the input string. Note the 0th memory address remains unused.
 	 */
 	constructor(
 		commands: RamCommand[],
@@ -32,7 +32,7 @@ export class RAM {
 		memory: (string | number)[] = []
 	) {
 		this.commands = commands;
-		this.initialMemory = ["", ...memory];
+		this.initialMemory = [...memory];
 		this.reset();
 		this.state.input = input;
 	}
