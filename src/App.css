@@ -25,13 +25,16 @@ footer {
 	font-size: large;
 }
 
-div.body {
+div.flex {
 	display: flex;
 	max-width: 60%;
+	margin: 0px auto;
+}
+
+div.body {
 	padding-top: 1rem;
 	/* Footer height*/
 	padding-bottom: 4rem;
-	margin: 0px auto;
 }
 
 footer {
@@ -98,4 +101,8 @@ ol.memory li {
 
 ol.memory li:last-child {
 	border-bottom: none;
+}
+
+.output {
+	display: block;
 }

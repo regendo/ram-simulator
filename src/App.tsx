@@ -9,11 +9,12 @@ import { Memory } from "./Memory";
 class App extends React.Component {
 	state: {
 		memory: (string | number)[];
+		ram: RAM | undefined;
 	};
 
 	constructor(props: {}) {
 		super(props);
-		this.state = { memory: ["", "", "", ""] };
+		this.state = { memory: ["", "", "", ""], ram: undefined };
 	}
 
 	callbackToEditMemory = (idx: number, elem: string) => {
@@ -33,37 +34,37 @@ class App extends React.Component {
 	script = React.createRef<HTMLTextAreaElement>();
 	input = React.createRef<HTMLInputElement>();
 	output = React.createRef<HTMLDivElement>();
-	ram: RAM;
 
-	runAndDisplayOutput = (event: React.FormEvent) => {
-		event.preventDefault();
-		if (!this.ram || this.ram.state.done) {
-			this.loadRAM();
+	runAndDisplayOutput = () => {
+		if (!this.state.ram || this.state.ram.state.done) {
+			return;
 		}
-		if (this.ram && this.ram.canExecuteLine()) {
-			this.ram.execFull();
-			this.updateOutput();
+		while (this.state.ram && this.state.ram.canExecuteLine()) {
+			this.executeOneStep();
 		}
 	};
 
 	executeOneStep = () => {
-		if (!this.ram) {
-			this.loadRAM();
+		if (!this.state.ram) {
+			return;
 		}
-		if (this.ram && this.ram.canExecuteLine()) {
-			this.ram.execLine();
+		if (this.state.ram && this.state.ram.canExecuteLine()) {
+			this.state.ram.execLine();
 			this.updateOutput();
 		}
 	};
 
-	loadRAM = () => {
+	loadRAM = (event: React.FormEvent) => {
+		event.preventDefault();
 		const script = this.script.current;
 		const input = this.input.current;
 		if (script && input) {
 			const program = parseScript(script.value);
 			if (isCommandArray(program)) {
 				script.classList.remove("error");
-				this.ram = new RAM(program, input.value, this.state.memory);
+				this.setState({
+					ram: new RAM(program, input.value, this.state.memory)
+				});
 			} else {
 				script.classList.add("error");
 				console.error(program);
@@ -73,18 +74,17 @@ class App extends React.Component {
 	};
 
 	updateOutput = () => {
-		if (this.ram && this.ram.commands.length > 0) {
+		if (this.state.ram && this.state.ram.commands.length > 0) {
 			this.output.current!.innerHTML = JSON.stringify({
-				acc: this.ram.state.accumulator,
-				step: this.ram.stepCount,
-				line: this.ram.state.line,
-				input: this.ram.state.input,
-				inputAt: this.ram.state.inputAt,
-				output: this.ram.state.output,
-				done: this.ram.state.done,
-				memory: this.ram.state.memory
+				acc: this.state.ram.state.accumulator,
+				step: this.state.ram.stepCount,
+				line: this.state.ram.state.line,
+				input: this.state.ram.state.input,
+				inputAt: this.state.ram.state.inputAt,
+				output: this.state.ram.state.output,
+				done: this.state.ram.state.done
 			});
-			this.setState({ memory: this.ram.state.memory });
+			this.setState({ memory: this.state.ram.state.memory });
 		} else {
 			this.output.current!.innerHTML = "";
 		}
@@ -97,18 +97,19 @@ class App extends React.Component {
 					<h1 className="App-title">RAM Simulator</h1>
 				</header>
 				<div className="body">
-					<textarea
-						id="script"
-						form="simulator"
-						autoCapitalize="none"
-						autoComplete="off"
-						autoFocus={true}
-						cols={40}
-						required
-						spellCheck={false}
-						ref={this.script}
-						className="code"
-						placeholder={`// enter your RAM program here
+					<div className="flex">
+						<textarea
+							id="script"
+							form="simulator"
+							autoCapitalize="none"
+							autoComplete="off"
+							autoFocus={true}
+							cols={40}
+							required
+							spellCheck={false}
+							ref={this.script}
+							className="code"
+							placeholder={`// enter your program here
 						// program that inverts a binary number
 						read
 						if '0' then 5
@@ -119,32 +120,33 @@ class App extends React.Component {
 						write '0'
 						goto 1
 						end`}
-					/>
-					<div>
-						<input
-							ref={this.input}
-							className="code"
-							spellCheck={false}
-							autoCapitalize="off"
-							autoCorrect="off"
-							placeholder="010110#"
-							form="simulator"
 						/>
-						<Memory
-							memory={this.state.memory}
-							allowEdit={!this.ram}
-							callback={this.callbackToEditMemory}
-						/>
+						<div>
+							<input
+								ref={this.input}
+								className="code"
+								spellCheck={false}
+								autoCapitalize="off"
+								autoCorrect="off"
+								placeholder="010110#"
+								form="simulator"
+							/>
+							<Memory
+								memory={this.state.memory}
+								allowEdit={!this.state.ram}
+								callback={this.callbackToEditMemory}
+							/>
+						</div>
+						<form id="simulator" onSubmit={this.loadRAM}>
+							<button type="button" onClick={this.runAndDisplayOutput}>
+								Execute full script
+							</button>
+							<button type="button" onClick={this.executeOneStep}>
+								Execute one step
+							</button>
+							<button type="submit">Load/Reset RAM</button>
+						</form>
 					</div>
-					<form id="simulator" onSubmit={this.runAndDisplayOutput}>
-						<button type="submit">Execute full script</button>
-						<button type="button" onClick={this.executeOneStep}>
-							Execute one step
-						</button>
-						<button type="button" onClick={this.loadRAM}>
-							Load/Reset RAM
-						</button>
-					</form>
 					<div id="output" ref={this.output} />
 				</div>
 				<Footer />
