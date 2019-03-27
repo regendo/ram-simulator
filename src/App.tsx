@@ -4,8 +4,18 @@ import { Footer } from "./Footer";
 import { parseScript } from "./logic/parser";
 import { isCommandArray } from "./logic/run";
 import { RAM } from "./logic/ram";
+import { Memory } from "./Memory";
 
 class App extends React.Component {
+	state: {
+		memory: (string | number)[];
+	};
+
+	constructor(props: {}) {
+		super(props);
+		this.state = { memory: [""] };
+	}
+
 	script = React.createRef<HTMLTextAreaElement>();
 	input = React.createRef<HTMLInputElement>();
 	output = React.createRef<HTMLDivElement>();
@@ -50,9 +60,19 @@ class App extends React.Component {
 
 	updateOutput = () => {
 		if (this.ram && this.ram.commands.length > 0) {
-			this.output.current!.innerHTML = JSON.stringify(this.ram.state);
+			this.output.current!.innerHTML = JSON.stringify({
+				acc: this.ram.state.accumulator,
+				step: this.ram.stepCount,
+				line: this.ram.state.line,
+				input: this.ram.state.input,
+				inputAt: this.ram.state.inputAt,
+				output: this.ram.state.output,
+				done: this.ram.state.done
+			});
+			this.setState({ memory: this.ram.state.memory });
 		} else {
 			this.output.current!.innerHTML = "";
+			this.setState({ memory: [""] });
 		}
 	};
 
@@ -104,6 +124,8 @@ class App extends React.Component {
 						</button>
 					</form>
 					<div id="output" ref={this.output} />
+
+					<Memory memory={this.state.memory} />
 				</div>
 				<Footer />
 			</div>
