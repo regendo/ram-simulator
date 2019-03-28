@@ -50,7 +50,7 @@ export class RAM {
 			input: input,
 			inputAt: 0,
 			line: 1,
-			memory: this.initialMemory,
+			memory: [...this.initialMemory],
 			output: "",
 			done: false
 		};

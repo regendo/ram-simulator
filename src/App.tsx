@@ -54,10 +54,16 @@ class App extends React.Component {
 		}
 	};
 
-	unhideExec = () => {
+	toggleDisplayedButtons = () => {
 		document
 			.querySelectorAll("button.exec")
-			.forEach((elem) => elem.classList.remove("hidden"));
+			.forEach((elem) => elem.classList.toggle("hidden"));
+		document
+			.querySelectorAll("button.unlock")
+			.forEach((elem) => elem.classList.toggle("hidden"));
+		document
+			.querySelectorAll("button.lock")
+			.forEach((elem) => elem.classList.toggle("hidden"));
 	};
 
 	loadRAM = (event: React.FormEvent) => {
@@ -71,12 +77,21 @@ class App extends React.Component {
 				this.setState({
 					ram: new RAM(program, input.value, this.state.memory)
 				});
-				this.unhideExec();
+				this.toggleDisplayedButtons();
 			} else {
 				script.classList.add("error");
 				console.error(program);
 			}
 		}
+		this.updateOutput();
+	};
+
+	unloadRAM = () => {
+		if (this.state.ram) {
+			this.state.ram.reset();
+		}
+		this.setState({ ram: undefined });
+		this.toggleDisplayedButtons();
 		this.updateOutput();
 	};
 
@@ -145,7 +160,16 @@ class App extends React.Component {
 							/>
 						</div>
 						<form id="simulator" onSubmit={this.loadRAM}>
-							<button type="submit">Load/Reset RAM</button>
+							<button className="lock" type="submit">
+								Lock & Load RAM
+							</button>
+							<button
+								className="unlock hidden"
+								type="button"
+								onClick={this.unloadRAM}
+							>
+								Unlock & Reset RAM
+							</button>
 							<button
 								className="exec hidden"
 								type="button"
