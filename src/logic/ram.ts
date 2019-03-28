@@ -18,6 +18,7 @@ export class RamState {
 export class RAM {
 	commands: RamCommand[];
 	stepCount: number;
+	prevLine: number;
 	state: RamState;
 	initialMemory: (string | number)[];
 	/**
@@ -55,6 +56,7 @@ export class RAM {
 			done: false
 		};
 		this.stepCount = 0;
+		this.prevLine = 0;
 	}
 
 	canExecuteLine(): boolean {
@@ -77,12 +79,12 @@ export class RAM {
 		if (!this.canExecuteLine()) {
 			return;
 		}
-		const prevLine = this.state.line;
+		this.prevLine = this.state.line;
 		const command = this.commands[this.state.line - 1];
 		command.execute(this.state);
 		this.stepCount++;
 		this.validate();
-		if (this.state.line == prevLine && !this.state.done) {
+		if (this.state.line == this.prevLine && !this.state.done) {
 			// regular command, execution didn't jump around
 			this.state.line++;
 		}
