@@ -90,9 +90,10 @@ class App extends React.Component {
 		if (this.state.ram) {
 			this.state.ram.reset();
 		}
-		this.setState({ ram: undefined });
+		this.setState((state, p) => {
+			return { ...state, ram: undefined };
+		}, this.updateOutput);
 		this.toggleDisplayedButtons();
-		this.updateOutput();
 	};
 
 	updateOutput = () => {
