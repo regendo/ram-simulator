@@ -64,6 +64,8 @@ class App extends React.Component {
 		document
 			.querySelectorAll("button.lock")
 			.forEach((elem) => elem.classList.toggle("hidden"));
+		this.script.current!.disabled = !this.script.current!.disabled;
+		this.input.current!.disabled = !this.input.current!.disabled;
 	};
 
 	loadRAM = (event: React.FormEvent) => {
