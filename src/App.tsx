@@ -92,6 +92,7 @@ class App extends React.Component {
 		if (this.state.ram) {
 			this.state.ram.reset();
 		}
+		this.updateOutput(); // TODO: update memory in separate function
 		this.setState((state, p) => {
 			return { ...state, ram: undefined };
 		}, this.updateOutput);
