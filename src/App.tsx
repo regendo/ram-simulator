@@ -54,6 +54,12 @@ class App extends React.Component {
 		}
 	};
 
+	unhideExec = () => {
+		document
+			.querySelectorAll("button.exec")
+			.forEach((elem) => elem.classList.remove("hidden"));
+	};
+
 	loadRAM = (event: React.FormEvent) => {
 		event.preventDefault();
 		const script = this.script.current;
@@ -65,6 +71,7 @@ class App extends React.Component {
 				this.setState({
 					ram: new RAM(program, input.value, this.state.memory)
 				});
+				this.unhideExec();
 			} else {
 				script.classList.add("error");
 				console.error(program);
@@ -138,13 +145,21 @@ class App extends React.Component {
 							/>
 						</div>
 						<form id="simulator" onSubmit={this.loadRAM}>
-							<button type="button" onClick={this.runAndDisplayOutput}>
+							<button type="submit">Load/Reset RAM</button>
+							<button
+								className="exec hidden"
+								type="button"
+								onClick={this.runAndDisplayOutput}
+							>
 								Execute full script
 							</button>
-							<button type="button" onClick={this.executeOneStep}>
+							<button
+								className="exec hidden"
+								type="button"
+								onClick={this.executeOneStep}
+							>
 								Execute one step
 							</button>
-							<button type="submit">Load/Reset RAM</button>
 						</form>
 					</div>
 					<div id="output" ref={this.output} />

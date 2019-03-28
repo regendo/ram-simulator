@@ -106,3 +106,7 @@ ol.memory li:last-child {
 .output {
 	display: block;
 }
+
+.hidden {
+	display: none;
+}
